@@ -74,6 +74,7 @@ jobs:
 
   lint:
     runs-on: ubuntu-latest
+    # Trigger CI to verify ACR permissions after adding Container Registry Tasks Contributor role
     steps:
       - uses: actions/checkout@v4
       - uses: psf/black@stable
