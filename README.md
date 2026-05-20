@@ -33,3 +33,7 @@ uvicorn app.main:app --reload
 - `POST /agent/query` - Query AI agent
 - `POST /api/v1/chat/` - Streaming chat
 - `POST /api/v1/invoices` - Upload invoice document
+
+## Azure Deployment
+
+Deployed via GitHub Actions to Azure Container Apps.
