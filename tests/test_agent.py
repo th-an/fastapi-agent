@@ -1,4 +1,9 @@
-from agent.result_types import QueryResult, CustomerInfo, OrderStatus, DocumentProcessingResult
+from agent.result_types import (
+    QueryResult,
+    CustomerInfo,
+    OrderStatus,
+    DocumentProcessingResult,
+)
 
 
 class TestAgentModule:
