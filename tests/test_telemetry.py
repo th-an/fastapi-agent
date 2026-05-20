@@ -14,7 +14,9 @@ class TestLogfireObservability:
         asyncio.run(connect_to_mongo())
 
         async def make_request():
-            async with AsyncClient(transport=ASGITransport(app=app), base_url='http://test') as client:
+            async with AsyncClient(
+                transport=ASGITransport(app=app), base_url="http://test"
+            ) as client:
                 await client.get("/health")
 
         asyncio.run(make_request())
@@ -29,7 +31,9 @@ class TestLogfireObservability:
         from motor.motor_asyncio import AsyncIOMotorClient
 
         async def db_operation():
-            client = AsyncIOMotorClient("mongodb+srv://sujithkannan5589_db_user:hqxxnDr67rgwf0Wj@cluster2005.3a4z3yr.mongodb.net/?appName=Cluster2005")
+            client = AsyncIOMotorClient(
+                "mongodb+srv://sujithkannan5589_db_user:hqxxnDr67rgwf0Wj@cluster2005.3a4z3yr.mongodb.net/?appName=Cluster2005"
+            )
             db = client["testdb"]
             await db.customers.find_one({"customer_id": "CUST-001"})
             client.close()
@@ -52,7 +56,9 @@ class TestLogfireObservability:
             return {"status": "ok"}
 
         async def make_request():
-            async with AsyncClient(transport=ASGITransport(app=test_app), base_url='http://test') as client:
+            async with AsyncClient(
+                transport=ASGITransport(app=test_app), base_url="http://test"
+            ) as client:
                 await client.get("/test")
 
         asyncio.run(make_request())
@@ -69,7 +75,9 @@ class TestMongoDBTelemetry:
         from motor.motor_asyncio import AsyncIOMotorClient
 
         async def test_db():
-            client = AsyncIOMotorClient("mongodb+srv://sujithkannan5589_db_user:hqxxnDr67rgwf0Wj@cluster2005.3a4z3yr.mongodb.net/?appName=Cluster2005")
+            client = AsyncIOMotorClient(
+                "mongodb+srv://sujithkannan5589_db_user:hqxxnDr67rgwf0Wj@cluster2005.3a4z3yr.mongodb.net/?appName=Cluster2005"
+            )
             db = client["testdb"]
             result = await db.command("ping")
             client.close()
@@ -109,16 +117,19 @@ class TestApplicationHealth:
     def test_app_has_logfire_configured(self):
         """Test app configuration includes Logfire."""
         from app.main import app
+
         assert app.title == "FastAPI MongoDB App"
 
     def test_app_includes_api_routers(self):
         """Test app includes Phase 4 routers."""
         from app.main import app
+
         routes = [r.path for r in app.routes]
         assert any("/api/v1" in path for path in routes)
 
     def test_cors_middleware_not_enabled_by_default(self):
         """Test CORS is not enabled (security best practice)."""
         from app.main import app
+
         middleware_names = [m.name for m in app.user_middleware]
         assert "CORSMiddleware" not in middleware_names

@@ -33,6 +33,7 @@ class TestAgentEndpoints:
     def setup_db(self):
         """Setup test database connection."""
         import asyncio
+
         asyncio.run(connect_to_mongo())
         yield
         asyncio.run(close_mongo_connection())
@@ -53,6 +54,7 @@ class TestAPIEndpoints:
     def setup_db(self):
         """Setup test database connection."""
         import asyncio
+
         asyncio.run(connect_to_mongo())
         yield
         asyncio.run(close_mongo_connection())
@@ -81,6 +83,7 @@ class TestConfigSettings:
     def test_settings_model_config(self):
         """Test Settings model accepts extra fields."""
         from app.config import Settings
+
         settings = Settings(APP_NAME="Test", ANTHROPIC_API_KEY="key123")
         assert settings.APP_NAME == "Test"
         assert settings.ANTHROPIC_API_KEY == "key123"
@@ -88,6 +91,7 @@ class TestConfigSettings:
     def test_settings_defaults(self):
         """Test Settings default values."""
         from app.config import Settings
+
         settings = Settings()
         assert settings.APP_NAME == "FastAPI MongoDB App"
         assert settings.DATABASE_NAME == "myapp"
@@ -97,6 +101,7 @@ class TestConfigSettings:
         monkeypatch.setenv("APP_NAME", "CustomApp")
         from importlib import reload
         import app.config as config_module
+
         reload(config_module)
         settings = config_module.Settings()
         assert settings.APP_NAME == "CustomApp"

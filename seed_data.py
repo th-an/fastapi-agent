@@ -20,20 +20,20 @@ async def seed_data():
             "customer_id": "CUST-001",
             "name": "John Doe",
             "email": "john@example.com",
-            "account_status": "active"
+            "account_status": "active",
         },
         {
             "customer_id": "CUST-002",
             "name": "Jane Smith",
             "email": "jane@example.com",
-            "account_status": "active"
+            "account_status": "active",
         },
         {
             "customer_id": "CUST-003",
             "name": "Bob Wilson",
             "email": "bob@example.com",
-            "account_status": "inactive"
-        }
+            "account_status": "inactive",
+        },
     ]
     await db.customers.insert_many(customers)
 
@@ -45,7 +45,7 @@ async def seed_data():
             "customer_id": "CUST-001",
             "items": [{"name": "Widget", "qty": 2, "price": 24.99}],
             "total": 49.98,
-            "created_at": "2026-05-15T10:30:00Z"
+            "created_at": "2026-05-15T10:30:00Z",
         },
         {
             "order_id": "ORD-002",
@@ -53,7 +53,7 @@ async def seed_data():
             "customer_id": "CUST-001",
             "items": [{"name": "Gadget", "qty": 1, "price": 99.99}],
             "total": 99.99,
-            "created_at": "2026-05-18T14:20:00Z"
+            "created_at": "2026-05-18T14:20:00Z",
         },
         {
             "order_id": "ORD-003",
@@ -61,8 +61,8 @@ async def seed_data():
             "customer_id": "CUST-002",
             "items": [{"name": "Thing", "qty": 3, "price": 15.00}],
             "total": 45.00,
-            "created_at": "2026-05-10T09:00:00Z"
-        }
+            "created_at": "2026-05-10T09:00:00Z",
+        },
     ]
     await db.orders.insert_many(orders)
 

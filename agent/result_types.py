@@ -41,4 +41,6 @@ class DocumentProcessingResult(BaseModel):
     extracted_text: str = Field(description="Text extracted from the document")
     confidence: float = Field(ge=0.0, le=1.0, description="Confidence in extraction")
     processing_status: str = Field(description="Status: success, failed, partial")
-    error_message: Optional[str] = Field(default=None, description="Error details if failed")
+    error_message: Optional[str] = Field(
+        default=None, description="Error details if failed"
+    )

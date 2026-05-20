@@ -23,15 +23,15 @@ Be precise and only extract information you're confident about. If the document 
 
 def create_document_agent(db: AsyncIOMotorDatabase) -> PydanticAgent:
     """Create a configured document processing agent."""
-    
+
     provider = AnthropicProvider(api_key=settings.ANTHROPIC_API_KEY)
     model = AnthropicModel("claude-sonnet-4-20250514", provider=provider)
-    
+
     agent = PydanticAgent(
         model=model,
         output_type=DocumentProcessingResult,
         system_prompt=SYSTEM_PROMPT,
         deps_type=AsyncIOMotorDatabase,
     )
-    
+
     return agent
