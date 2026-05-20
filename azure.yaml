@@ -1,0 +1,109 @@
+schema: https://schemas.microsoft.com/https://schemas.azure.com/schemas/2024-01-01/bicep.yaml
+metadata:
+  name: FastAPI MongoDB App
+targetScope: resourceGroup
+
+@description('Application name')
+param appName string = 'fastapi-mongodb-agent'
+
+@description('Azure location')
+param location string = 'eastus'
+
+@description('Container registry name')
+param containerRegistryName string = '${appName}acr'
+
+@description('Container app environment name')
+param containerAppEnvName string = '${appName}env'
+
+resource containerRegistry 'Microsoft.ContainerRegistry/registries@2023-07-01' = {
+  name: containerRegistryName
+  location: location
+  sku: {
+    name: 'Basic'
+  }
+  properties: {
+    adminUserEnabled: false
+  }
+}
+
+resource containerAppEnvironment 'Microsoft.App/managedEnvironments@2023-05-01' = {
+  name: containerAppEnvName
+  location: location
+  properties: {
+    containerAppsConfiguration: {
+      fqdnSuffix: ''
+    }
+  }
+}
+
+resource containerApp 'Microsoft.App/containerApps@2023-05-01' = {
+  name: appName
+  location: location
+  properties: {
+    managedEnvironmentId: containerAppEnvironment.id
+    configuration: {
+      ingress: {
+        external: true
+        targetPort: 8000
+        transport: 'http'
+        allowInsecure: false
+      }
+      registries: [
+        {
+          server: containerRegistry.properties.loginServer
+          usernameSecretName: 'acr-username'
+          passwordSecretName: 'acr-password'
+        }
+      ]
+    }
+    template: {
+      containers: [
+        {
+          name: app
+          properties: {
+            image: ''
+            env: [
+              {
+                name: 'MONGODB_URL'
+                value: ''
+              }
+              {
+                name: 'ANTHROPIC_API_KEY'
+                value: ''
+              }
+              {
+                name: 'LOGFIRE_TOKEN'
+                value: ''
+              }
+              {
+                name: 'DATABASE_NAME'
+                value: 'myapp'
+              }
+            ]
+            resources: {
+              cpu: json('0.25')
+              memory: '0.5Gi'
+            }
+          }
+        }
+      ]
+      scale: {
+        minReplicas: 0
+        maxReplicas: 10
+        rules: [
+          {
+            name: 'http-scaling'
+            http: {
+              metadata: {
+                concurrentRequests: '10'
+              }
+            }
+          }
+        ]
+      }
+    }
+  }
+}
+
+output registryLoginServer string = containerRegistry.properties.loginServer
+output appUrl string = 'https://${containerApp.properties.configuration.ingress.fqdn}'
