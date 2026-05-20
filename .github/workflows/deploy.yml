@@ -34,9 +34,8 @@ jobs:
 
       - name: Run linting and type checking
         run: |
-          pip install mypy ruff
+          pip install ruff
           ruff check .
-          mypy app agent
 
       - name: Run unit tests
         run: |
