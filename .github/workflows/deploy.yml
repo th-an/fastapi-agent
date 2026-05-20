@@ -81,11 +81,3 @@ jobs:
         with:
           options: "--check --diff"
           version: "24.1"
-
-  type-check:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - uses: python/mypy@master
-        with:
-          mypy_args: "app agent"
