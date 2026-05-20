@@ -37,3 +37,4 @@ uvicorn app.main:app --reload
 ## Azure Deployment
 
 Deployed via GitHub Actions to Azure Container Apps.
+[![Deploy to Azure](https://github.com/th-an/fastapi-agent/actions/workflows/deploy.yml/badge.svg)](https://github.com/th-an/fastapi-agent/actions/workflows/deploy.yml)
