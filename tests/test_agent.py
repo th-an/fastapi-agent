@@ -1,7 +1,3 @@
-import pytest
-from unittest.mock import AsyncMock, MagicMock
-from pydantic_ai import Agent
-from pydantic_ai.models.test import TestModel
 from agent.agent import create_agent
 from agent.result_types import QueryResult, CustomerInfo, OrderStatus
 
@@ -35,7 +31,6 @@ class TestAgentUnitTests:
     def test_agent_deps_type_is_database(self, mock_db):
         """Test that agent uses AsyncIOMotorDatabase as deps type."""
         from agent.agent import create_agent
-        from motor.motor_asyncio import AsyncIOMotorDatabase
 
         agent = create_agent(mock_db)
         deps_type = agent.deps_type

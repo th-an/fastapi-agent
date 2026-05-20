@@ -1,7 +1,5 @@
 import pytest
-from unittest.mock import AsyncMock, MagicMock, patch
 from fastapi.testclient import TestClient
-from httpx import AsyncClient, ASGITransport
 from app.main import app
 from app.database import connect_to_mongo, close_mongo_connection
 

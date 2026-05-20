@@ -1,8 +1,6 @@
-from pydantic_ai import Agent
 from pydantic_ai.models.anthropic import AnthropicModel
 from pydantic_ai.providers.anthropic import AnthropicProvider
 from pydantic_ai.agent import Agent as PydanticAgent
-from pydantic_ai.messages import ModelResponse
 from motor.motor_asyncio import AsyncIOMotorDatabase
 from agent.result_types import DocumentProcessingResult
 from app.config import get_settings

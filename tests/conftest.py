@@ -5,18 +5,14 @@ sys.path.insert(0, str(Path(__file__).parent.parent))
 
 import pytest
 from unittest.mock import AsyncMock, MagicMock
-from motor.motor_asyncio import AsyncIOMotorDatabase
-from pydantic_ai import Agent
 from pydantic_ai.models.test import TestModel
 from agent.agent import create_agent
-from agent.result_types import QueryResult
-from app.config import Settings, get_settings
+from app.config import Settings
 
 
 @pytest.fixture
 def mock_db():
     """Mock MongoDB database for testing."""
-    from unittest.mock import AsyncMock, MagicMock
 
     mock_customers = MagicMock()
     mock_customers.find_one = AsyncMock(
