@@ -8,6 +8,10 @@ on:
     branches:
       - main
 
+permissions:
+  contents: read
+  packages: write
+
 env:
   IMAGE_NAME: ghcr.io/${{ github.repository_owner }}/fastapi-mongodb-agent
   DOCKER_BUILDKIT: 1
