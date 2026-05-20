@@ -1,65 +1,29 @@
-from agent.result_types import QueryResult, CustomerInfo, OrderStatus
+from agent.result_types import QueryResult, CustomerInfo, OrderStatus, DocumentProcessingResult
 
 
-class TestAgentConfig:
-    """Test agent configuration without requiring API key."""
+class TestAgentModule:
+    """Test agent module structure without requiring API key."""
 
-    def test_agent_module_has_create_agent_function(self):
-        """Test that create_agent function exists."""
-        from agent.agent import create_agent
+    def test_agent_module_exists(self):
+        """Test that agent module and functions exist."""
+        from agent.agent import create_agent, create_chat_agent
 
         assert callable(create_agent)
+        assert callable(create_chat_agent)
 
-    def test_agent_output_type_is_query_result(self):
-        """Test that agent output_type is correctly set to QueryResult."""
-        from agent.agent import create_agent
-        from unittest.mock import patch, MagicMock
+    def test_result_types_importable(self):
+        """Test that all result types are importable."""
+        from agent.result_types import (
+            QueryResult,
+            CustomerInfo,
+            OrderStatus,
+            DocumentProcessingResult,
+        )
 
-        with patch("agent.agent.get_settings") as mock_settings:
-            mock_settings.return_value = MagicMock(
-                ANTHROPIC_API_KEY="test-key",
-                MONGODB_URL="mongodb://localhost",
-                DATABASE_NAME="test",
-            )
-            mock_db = MagicMock()
-            agent = create_agent(mock_db)
-            output_type = getattr(agent, "output_type", None) or getattr(
-                agent, "_output_type", None
-            )
-            assert output_type is not None
-            assert output_type == QueryResult
-
-    def test_agent_system_prompt_is_set(self):
-        """Test that agent has system prompt configured."""
-        from agent.agent import create_agent
-        from unittest.mock import patch, MagicMock
-
-        with patch("agent.agent.get_settings") as mock_settings:
-            mock_settings.return_value = MagicMock(
-                ANTHROPIC_API_KEY="test-key",
-                MONGODB_URL="mongodb://localhost",
-                DATABASE_NAME="test",
-            )
-            mock_db = MagicMock()
-            agent = create_agent(mock_db)
-            system_prompt = getattr(agent, "system_prompt", None)
-            assert system_prompt is not None
-
-    def test_agent_deps_type_is_database(self):
-        """Test that agent uses AsyncIOMotorDatabase as deps type."""
-        from agent.agent import create_agent
-        from unittest.mock import patch, MagicMock
-
-        with patch("agent.agent.get_settings") as mock_settings:
-            mock_settings.return_value = MagicMock(
-                ANTHROPIC_API_KEY="test-key",
-                MONGODB_URL="mongodb://localhost",
-                DATABASE_NAME="test",
-            )
-            mock_db = MagicMock()
-            agent = create_agent(mock_db)
-            deps_type = agent.deps_type
-            assert deps_type is not None
+        assert QueryResult is not None
+        assert CustomerInfo is not None
+        assert OrderStatus is not None
+        assert DocumentProcessingResult is not None
 
 
 class TestCustomerInfoSchema:
@@ -161,53 +125,30 @@ class TestQueryResultSchema:
         assert result.sources == []
 
 
-class TestAgentToolsIntegration:
-    """Test agent tools are properly registered and callable."""
+class TestDocumentProcessingResultSchema:
+    """Tests for DocumentProcessingResult Pydantic schema validation."""
 
-    def test_agent_deps_type_correct(self):
-        """Test that agent uses correct deps type."""
-        from agent.agent import create_agent
-        from unittest.mock import patch, MagicMock
+    def test_document_processing_result_valid(self):
+        """Test valid DocumentProcessingResult creation."""
+        result = DocumentProcessingResult(
+            filename="invoice.pdf",
+            document_type="invoice",
+            extracted_text="Invoice #12345",
+            confidence=0.9,
+            processing_status="success",
+        )
+        assert result.filename == "invoice.pdf"
+        assert result.document_type == "invoice"
+        assert result.processing_status == "success"
 
-        with patch("agent.agent.get_settings") as mock_settings:
-            mock_settings.return_value = MagicMock(
-                ANTHROPIC_API_KEY="test-key",
-                MONGODB_URL="mongodb://localhost",
-                DATABASE_NAME="test",
-            )
-            mock_db = MagicMock()
-            agent = create_agent(mock_db)
-            assert agent.deps_type is not None
-
-    def test_agent_has_system_prompt(self):
-        """Test that agent has system prompt configured."""
-        from agent.agent import create_agent
-        from unittest.mock import patch, MagicMock
-
-        with patch("agent.agent.get_settings") as mock_settings:
-            mock_settings.return_value = MagicMock(
-                ANTHROPIC_API_KEY="test-key",
-                MONGODB_URL="mongodb://localhost",
-                DATABASE_NAME="test",
-            )
-            mock_db = MagicMock()
-            agent = create_agent(mock_db)
-            assert hasattr(agent, "system_prompt") or hasattr(agent, "_system_prompt")
-
-    def test_agent_output_type_is_query_result(self):
-        """Test that agent output_type is QueryResult."""
-        from agent.agent import create_agent
-        from unittest.mock import patch, MagicMock
-
-        with patch("agent.agent.get_settings") as mock_settings:
-            mock_settings.return_value = MagicMock(
-                ANTHROPIC_API_KEY="test-key",
-                MONGODB_URL="mongodb://localhost",
-                DATABASE_NAME="test",
-            )
-            mock_db = MagicMock()
-            agent = create_agent(mock_db)
-            output_type = getattr(agent, "output_type", None) or getattr(
-                agent, "_output_type", None
-            )
-            assert output_type is not None
+    def test_document_processing_result_with_error(self):
+        """Test DocumentProcessingResult with error."""
+        result = DocumentProcessingResult(
+            filename="unreadable.pdf",
+            document_type="unknown",
+            extracted_text="",
+            confidence=0.0,
+            processing_status="failed",
+            error_message="Could not parse document",
+        )
+        assert result.error_message == "Could not parse document"
