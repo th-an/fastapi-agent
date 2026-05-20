@@ -1,40 +1,65 @@
-from agent.agent import create_agent
 from agent.result_types import QueryResult, CustomerInfo, OrderStatus
 
 
-class TestAgentUnitTests:
-    """Deterministic unit tests using TestModel and FunctionModel.
+class TestAgentConfig:
+    """Test agent configuration without requiring API key."""
 
-    Note: These tests require a real database connection for tool execution.
-    For unit testing without real DB, use mocked dependencies.
-    """
+    def test_agent_module_has_create_agent_function(self):
+        """Test that create_agent function exists."""
+        from agent.agent import create_agent
 
-    def test_agent_output_type_is_query_result(self, mock_db):
+        assert callable(create_agent)
+
+    def test_agent_output_type_is_query_result(self):
         """Test that agent output_type is correctly set to QueryResult."""
         from agent.agent import create_agent
+        from unittest.mock import patch, MagicMock
 
-        agent = create_agent(mock_db)
-        output_type = getattr(agent, "output_type", None) or getattr(
-            agent, "_output_type", None
-        )
-        assert output_type is not None
-        assert output_type == QueryResult
+        with patch("agent.agent.get_settings") as mock_settings:
+            mock_settings.return_value = MagicMock(
+                ANTHROPIC_API_KEY="test-key",
+                MONGODB_URL="mongodb://localhost",
+                DATABASE_NAME="test",
+            )
+            mock_db = MagicMock()
+            agent = create_agent(mock_db)
+            output_type = getattr(agent, "output_type", None) or getattr(
+                agent, "_output_type", None
+            )
+            assert output_type is not None
+            assert output_type == QueryResult
 
-    def test_agent_system_prompt_is_set(self, mock_db):
+    def test_agent_system_prompt_is_set(self):
         """Test that agent has system prompt configured."""
         from agent.agent import create_agent
+        from unittest.mock import patch, MagicMock
 
-        agent = create_agent(mock_db)
-        system_prompt = getattr(agent, "system_prompt", None)
-        assert system_prompt is not None
+        with patch("agent.agent.get_settings") as mock_settings:
+            mock_settings.return_value = MagicMock(
+                ANTHROPIC_API_KEY="test-key",
+                MONGODB_URL="mongodb://localhost",
+                DATABASE_NAME="test",
+            )
+            mock_db = MagicMock()
+            agent = create_agent(mock_db)
+            system_prompt = getattr(agent, "system_prompt", None)
+            assert system_prompt is not None
 
-    def test_agent_deps_type_is_database(self, mock_db):
+    def test_agent_deps_type_is_database(self):
         """Test that agent uses AsyncIOMotorDatabase as deps type."""
         from agent.agent import create_agent
+        from unittest.mock import patch, MagicMock
 
-        agent = create_agent(mock_db)
-        deps_type = agent.deps_type
-        assert deps_type is not None
+        with patch("agent.agent.get_settings") as mock_settings:
+            mock_settings.return_value = MagicMock(
+                ANTHROPIC_API_KEY="test-key",
+                MONGODB_URL="mongodb://localhost",
+                DATABASE_NAME="test",
+            )
+            mock_db = MagicMock()
+            agent = create_agent(mock_db)
+            deps_type = agent.deps_type
+            assert deps_type is not None
 
 
 class TestCustomerInfoSchema:
@@ -139,20 +164,50 @@ class TestQueryResultSchema:
 class TestAgentToolsIntegration:
     """Test agent tools are properly registered and callable."""
 
-    def test_agent_deps_type_correct(self, mock_db):
+    def test_agent_deps_type_correct(self):
         """Test that agent uses correct deps type."""
-        agent = create_agent(mock_db)
-        assert agent.deps_type is not None
+        from agent.agent import create_agent
+        from unittest.mock import patch, MagicMock
 
-    def test_agent_has_system_prompt(self, mock_db):
+        with patch("agent.agent.get_settings") as mock_settings:
+            mock_settings.return_value = MagicMock(
+                ANTHROPIC_API_KEY="test-key",
+                MONGODB_URL="mongodb://localhost",
+                DATABASE_NAME="test",
+            )
+            mock_db = MagicMock()
+            agent = create_agent(mock_db)
+            assert agent.deps_type is not None
+
+    def test_agent_has_system_prompt(self):
         """Test that agent has system prompt configured."""
-        agent = create_agent(mock_db)
-        assert hasattr(agent, "system_prompt") or hasattr(agent, "_system_prompt")
+        from agent.agent import create_agent
+        from unittest.mock import patch, MagicMock
 
-    def test_agent_output_type_is_query_result(self, mock_db):
+        with patch("agent.agent.get_settings") as mock_settings:
+            mock_settings.return_value = MagicMock(
+                ANTHROPIC_API_KEY="test-key",
+                MONGODB_URL="mongodb://localhost",
+                DATABASE_NAME="test",
+            )
+            mock_db = MagicMock()
+            agent = create_agent(mock_db)
+            assert hasattr(agent, "system_prompt") or hasattr(agent, "_system_prompt")
+
+    def test_agent_output_type_is_query_result(self):
         """Test that agent output_type is QueryResult."""
-        agent = create_agent(mock_db)
-        output_type = getattr(agent, "output_type", None) or getattr(
-            agent, "_output_type", None
-        )
-        assert output_type is not None
+        from agent.agent import create_agent
+        from unittest.mock import patch, MagicMock
+
+        with patch("agent.agent.get_settings") as mock_settings:
+            mock_settings.return_value = MagicMock(
+                ANTHROPIC_API_KEY="test-key",
+                MONGODB_URL="mongodb://localhost",
+                DATABASE_NAME="test",
+            )
+            mock_db = MagicMock()
+            agent = create_agent(mock_db)
+            output_type = getattr(agent, "output_type", None) or getattr(
+                agent, "_output_type", None
+            )
+            assert output_type is not None
