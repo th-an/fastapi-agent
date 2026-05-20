@@ -52,8 +52,8 @@ jobs:
           az acr build \
             --registry ${{ secrets.AZURE_CONTAINER_REGISTRY }} \
             --image ${{ env.AZURE_CONTAINER_APPS_IMAGE }}:${{ github.sha }} \
-            --dockerfile Dockerfile \
-            --context . \
+            --file Dockerfile \
+            . \
             --build-arg PYTHON_VERSION=3.13
 
       - name: Deploy to Azure Container Apps
@@ -61,7 +61,7 @@ jobs:
         with:
           azurecredentials: ${{ secrets.AZURE_CREDENTIALS }}
           containerAppName: ${{ secrets.AZURE_CONTAINER_APP_NAME }}
-          resourceGroupName: ${{ secrets.AZURE_RESOURCE_GROUP }}
+          resourceGroup: ${{ secrets.AZURE_RESOURCE_GROUP }}
           containerImageRegistry: ${{ secrets.AZURE_CONTAINER_REGISTRY }}.azurecr.io
           imageToDeploy: ${{ env.AZURE_CONTAINER_APPS_IMAGE }}:${{ github.sha }}
           environmentVariables: |
